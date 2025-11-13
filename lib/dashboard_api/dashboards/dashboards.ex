@@ -5,7 +5,7 @@ defmodule DashboardApi.Dashboards.Dashboards do
   schema "dashboards" do
     field :name, :string
     belongs_to :system, DashboardApi.Dashboards.Systems
-    has_many :dashboard_cards, DashboardApi.Dashboards.DashboardCards
+    has_many :dashboard_cards, DashboardApi.Dashboards.DashboardCards, foreign_key: :dashboard_id
     timestamps(type: :utc_datetime)
   end
 
@@ -13,6 +13,7 @@ defmodule DashboardApi.Dashboards.Dashboards do
     dashboard
     |> cast(attrs, [:name])
     |> validate_required([:name, :system_id])
+    |> validate_length(:name, min: 1, max: 100, message: "name must be between 1 and 100 characters")
     |> foreign_key_constraint(:system_id)
   end
 end
