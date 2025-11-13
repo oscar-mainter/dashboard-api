@@ -1,0 +1,18 @@
+defmodule DashboardApi.Dashboards.Dashboards do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  schema "dashboards" do
+    field :name, :string
+    belongs_to :system, DashboardApi.Dashboards.Systems
+    has_many :dashboard_cards, DashboardApi.Dashboards.DashboardCards
+    timestamps(type: :utc_datetime)
+  end
+
+  def changeset(dashboard, attrs) do
+    dashboard
+    |> cast(attrs, [:name])
+    |> validate_required([:name, :system_id])
+    |> foreign_key_constraint(:system_id)
+  end
+end
