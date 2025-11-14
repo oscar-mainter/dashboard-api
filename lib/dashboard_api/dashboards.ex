@@ -13,7 +13,6 @@ defmodule DashboardApi.Dashboards.Dashboards do
     |> Repo.insert()
   end
 
-  @spec get_dashboard(any()) :: any()
   def get_dashboard(id) do
     Repo.get(Dashboard, id)
   end
