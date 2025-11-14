@@ -7,22 +7,22 @@ defmodule DashboardApiWeb.Router do
 
   scope "/api", DashboardApiWeb do
     pipe_through :api
-  end
 
-  # Enable LiveDashboard and Swoosh mailbox preview in development
-  if Application.compile_env(:dashboard_api, :dev_routes) do
-    # If you want to use the LiveDashboard in production, you should put
-    # it behind authentication and allow only admins to access it.
-    # If your application does not have an admins-only section yet,
-    # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
-    import Phoenix.LiveDashboard.Router
+    scope "/dashboards/:system_id/:user_id" do
+      pipe_through DashboardApiWeb.Plugs.ValidateSystemUser
 
-    scope "/dev" do
-      pipe_through [:fetch_session, :protect_from_forgery]
+      post "/", DashboardController, :create
+      get "/", DashboardController, :index
+      get "/:dashboard_id", DashboardController, :show
+      delete "/:dashboard_id", DashboardController, :delete
+    end
 
-      live_dashboard "/dashboard", metrics: DashboardApiWeb.Telemetry
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+    scope "/dashboards/:system_id/:user_id/:dashboard_id/cards" do
+      pipe_through [DashboardApiWeb.Plugs.ValidateSystemUser, DashboardApiWeb.Plugs.ValidateDashboard]
+
+      post "/", DashboardCardController, :create
+      patch "/:id", DashboardCardController, :update
+      delete "/:id", DashboardCardController, :delete
     end
   end
 end
