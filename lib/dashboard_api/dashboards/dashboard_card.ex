@@ -1,4 +1,4 @@
-defmodule DashboardApi.Dashboards.DashboardCards do
+defmodule DashboardApi.Dashboards.DashboardCard do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -8,7 +8,7 @@ defmodule DashboardApi.Dashboards.DashboardCards do
     field :w, :integer
     field :h, :integer
     belongs_to :system, DashboardApi.Dashboards.Systems
-    belongs_to :dashboard, DashboardApi.Dashboards.Dashboards
+    belongs_to :dashboard, DashboardApi.Dashboards.Dashboard
     timestamps(type: :utc_datetime)
   end
 

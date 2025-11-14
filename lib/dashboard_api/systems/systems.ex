@@ -4,7 +4,7 @@ defmodule DashboardApi.Dashboards.Systems do
 
   schema "systems" do
     field :name, :string
-    has_many :dashboards, DashboardApi.Dashboards.Dashboards, foreign_key: :system_id
+    has_many :dashboards, DashboardApi.Dashboards.Dashboard, foreign_key: :system_id
     timestamps(type: :utc_datetime)
   end
 
