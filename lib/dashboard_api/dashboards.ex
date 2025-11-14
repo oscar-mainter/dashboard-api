@@ -3,9 +3,9 @@ defmodule DashboardApi.Dashboards.Dashboards do
   The Dashboards context - handles dashboard operations.
   """
 
-  use Ecto.Schema
   alias DashboardApi.Repo
   alias DashboardApi.Dashboards.Dashboard
+  import Ecto.Query
 
   def create_dashboard(attrs) do
     %Dashboard{}
@@ -13,14 +13,27 @@ defmodule DashboardApi.Dashboards.Dashboards do
     |> Repo.insert()
   end
 
-  def get_dashboard(id) do
-    Repo.get(Dashboard, id)
+  def get_dashboard(dashboard_id) do
+    case Repo.get(Dashboard, dashboard_id) do
+      nil ->
+        {:error, :not_found}
+      dashboard ->
+        {:ok, dashboard}
+    end
   end
 
-  def delete_dashboard(id) do
-    case Repo.get(Dashboard, id) do
-      nil -> {:error, :not_found}
-      dashboard -> Repo.delete(dashboard)
+  def list_dashboards(system_id, user_id) do
+    Dashboard
+    |> where([d], d.system_id == ^system_id and d.user_id == ^user_id)
+    |> Repo.all()
+  end
+
+  def delete_dashboard(dashboard_id) do
+    case Repo.get(Dashboard, dashboard_id: dashboard_id) do
+      nil ->
+        {:error, :not_found}
+      dashboard ->
+        Repo.delete(dashboard)
     end
   end
 end

@@ -13,9 +13,20 @@ defmodule DashboardApi.Dashboards.Dashboard do
   def changeset(dashboard, attrs) do
     dashboard
     |> cast(attrs, [:name])
-    |> validate_required([:name, :system_id, :user_id])
+    |> validate_required([:name])
+    |> put_required_ids(attrs)
+    |> validate_required([:system_id, :user_id])
     |> validate_length(:name, min: 1, max: 100, message: "name must be between 1 and 100 characters")
     |> foreign_key_constraint(:system_id)
     |> foreign_key_constraint(:user_id)
+  end
+
+  defp put_required_ids(changeset, attrs) do
+    system_id = attrs["system_id"] || attrs[:system_id]
+    user_id = attrs["user_id"] || attrs[:user_id]
+
+    changeset
+    |> put_change(:system_id, system_id)
+    |> put_change(:user_id, user_id)
   end
 end
