@@ -1,4 +1,4 @@
-defmodule DashboardApi.Dashboards.Systems do
+defmodule DashboardApi.Dashboards.System do
   use Ecto.Schema
   import Ecto.Changeset
 

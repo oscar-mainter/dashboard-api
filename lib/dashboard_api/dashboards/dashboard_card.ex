@@ -7,7 +7,7 @@ defmodule DashboardApi.Dashboards.DashboardCard do
     field :y, :integer
     field :w, :integer
     field :h, :integer
-    belongs_to :system, DashboardApi.Dashboards.Systems
+    belongs_to :system, DashboardApi.Dashboards.System
     belongs_to :dashboard, DashboardApi.Dashboards.Dashboard
     timestamps(type: :utc_datetime)
   end

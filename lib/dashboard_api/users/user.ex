@@ -3,9 +3,9 @@ defmodule DashboardApi.Users.User do
   import Ecto.Changeset
 
   schema "users" do
-    field :name, :string, null: false
-    belongs_to :system, DashboardApi.Systems.System
-    has_many :dashboards, DashboardApi.Dashboards.Dashboard, foreign_key: user_id
+    field :name, :string
+    belongs_to :system, DashboardApi.Dashboards.System
+    has_many :dashboards, DashboardApi.Dashboards.Dashboard, foreign_key: :user_id
     timestamps(type: :utc_datetime)
   end
 
