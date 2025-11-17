@@ -45,7 +45,8 @@ defmodule DashboardApiWeb.DashboardController do
     case Dashboards.get_dashboard(dashboard_id) do
       {:ok, dashboard} ->
         conn
-        |> render(:show, dashboard: dashboard)
+        |> put_view(DashboardApiWeb.Views.DashboardWithCardsJSON)
+        |> render("show.json", dashboard: dashboard)
       {:error, :not_found} ->
         conn
         |> put_status(:not_found)

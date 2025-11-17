@@ -3,7 +3,6 @@ defmodule DashboardApiWeb.Views.DashboardCardJSON do
     %{data: for(card <- cards, do: render("show.json", %{card: card}))}
   end
 
-  # Render a single card
   def render("show.json", %{card: card}) do
     %{
       id: card.id,

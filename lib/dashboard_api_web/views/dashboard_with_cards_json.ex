@@ -1,5 +1,5 @@
 defmodule DashboardApiWeb.Views.DashboardWithCardsJSON do
-  alias DashboardApiWeb.DashboardCardJSON
+  alias DashboardApiWeb.Views.DashboardCardJSON
 
   def render("index.json", %{dashboards: dashboards}) do
     %{data: for(dashboard <- dashboards, do: render("show.json", %{dashboard: dashboard}))}
