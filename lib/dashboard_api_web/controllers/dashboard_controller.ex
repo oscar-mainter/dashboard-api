@@ -3,6 +3,8 @@ defmodule DashboardApiWeb.DashboardController do
 
   alias DashboardApi.Dashboards.Dashboards
 
+  plug DashboardApiWeb.Plugs.ValidateBody, fields: [:name, :system_id, :user_id]
+
   def create(conn, %{"name" => name} = params) do
     attrs = %{
       "name" => name,
@@ -14,7 +16,8 @@ defmodule DashboardApiWeb.DashboardController do
       {:ok, dashboard} ->
         conn
         |> put_status(:created)
-        |> render(:show, dashboard: dashboard)
+        |> put_view(DashboardApiWeb.Views.DashboardWithCardsJSON)
+        |> render(:show, %{dashboard: dashboard})
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
