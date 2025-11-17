@@ -69,7 +69,8 @@ defmodule DashboardApiWeb.DashboardController do
       {:error, :not_found} ->
         conn
         |> put_status(:not_found)
-        |> render(:error, message: "Dashboard not found")
+        |> put_view(DashboardApiWeb.Views.DashboardJSON)
+        |> render("error.json", message: "Dashboard not found")
      end
   end
 end

@@ -6,7 +6,7 @@ defmodule DashboardApi.Dashboards.Dashboard do
     field :name, :string
     belongs_to :system, DashboardApi.Dashboards.System
     belongs_to :user, DashboardApi.Users.User
-    has_many :dashboard_cards, DashboardApi.Dashboards.DashboardCard, foreign_key: :dashboard_id
+    has_many :dashboard_cards, DashboardApi.Dashboards.DashboardCard, foreign_key: :dashboard_id, on_delete: :delete_all
     timestamps(type: :utc_datetime)
   end
 

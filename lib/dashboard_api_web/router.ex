@@ -29,4 +29,6 @@ defmodule DashboardApiWeb.Router do
       delete "/:dashboard_card_id", DashboardCardController, :delete
     end
   end
+
+  match :*, "/*path", DashboardApiWeb.Plugs.CatchAll, :not_found
 end
