@@ -1,7 +1,7 @@
 defmodule DashboardApiWeb.DashboardCardController do
   use DashboardApiWeb, :controller
 
-  alias DashboardApi.Dashboards.DashboardCards
+  alias DashboardApi.Dashboards.Dashboards
 
   def create(conn, params) do
     attrs = %{
@@ -13,7 +13,7 @@ defmodule DashboardApiWeb.DashboardCardController do
       "dashboard_id" => params["dashboard_id"]
     }
 
-    case DashboardCards.create_dashboard_card(attrs) do
+    case Dashboards.create_dashboard_card(attrs) do
       {:ok, card} ->
         conn
         |> put_status(:created)
@@ -34,7 +34,7 @@ defmodule DashboardApiWeb.DashboardCardController do
       "h" => params["h"]
     }
 
-    case DashboardCards.update_dashboard_card(dashboard_card_id, update_attrs) do
+    case Dashboards.update_dashboard_card(dashboard_card_id, update_attrs) do
       {:ok, card} ->
         conn
         |> render(:show, card: card)
@@ -53,7 +53,7 @@ defmodule DashboardApiWeb.DashboardCardController do
 
   def delete(conn, %{"dashboard_card_id" => dashboard_card_id}) do
 
-    case DashboardCards.delete_dashboard_card(dashboard_card_id, %{}) do
+    case Dashboards.delete_dashboard_card(dashboard_card_id, %{}) do
       {:ok, _card} ->
         conn
         |> put_status(:no_content)
