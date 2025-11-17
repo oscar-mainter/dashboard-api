@@ -14,7 +14,7 @@ defmodule DashboardApi.Dashboards.Dashboards do
   end
 
   def get_dashboard(dashboard_id) do
-    case Repo.get(Dashboard, dashboard_id) do
+    case Repo.get(Dashboard, dashboard_id) |> Repo.preload(:dashboard_cards) do
       nil ->
         {:error, :not_found}
       dashboard ->
@@ -29,7 +29,7 @@ defmodule DashboardApi.Dashboards.Dashboards do
   end
 
   def delete_dashboard(dashboard_id) do
-    case Repo.get(Dashboard, dashboard_id: dashboard_id) do
+    case Repo.get(Dashboard, dashboard_id) do
       nil ->
         {:error, :not_found}
       dashboard ->

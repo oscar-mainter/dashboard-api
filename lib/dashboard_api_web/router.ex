@@ -5,6 +5,8 @@ defmodule DashboardApiWeb.Router do
     plug :accepts, ["json"]
   end
 
+  get "/", DashboardApiWeb.PageController, :index
+
   scope "/api", DashboardApiWeb do
     pipe_through :api
 

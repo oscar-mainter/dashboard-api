@@ -3,7 +3,7 @@ defmodule DashboardApiWeb.DashboardCardController do
 
   alias DashboardApi.Dashboards.DashboardCards
 
-  def create(conn, params ) do
+  def create(conn, params) do
     attrs = %{
       "x" => params["x"],
       "y" => params["y"],
@@ -32,7 +32,7 @@ defmodule DashboardApiWeb.DashboardCardController do
       "x" => params["x"],
       "y" => params["y"],
       "w" => params["w"],
-      "h" => params["h"],
+      "h" => params["h"]
     }
 
     case DashboardCards.update_dashboard_card(card_id, update_attrs) do

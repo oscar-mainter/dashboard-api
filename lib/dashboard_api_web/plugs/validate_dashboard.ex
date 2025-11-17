@@ -12,7 +12,7 @@ defmodule DashboardApiWeb.Plugs.ValidateDashboard do
   def init(opts), do: opts
 
   def call(conn, _opts) do
-    params = conn.params || conn.body_params || %{}
+    params = conn.params || %{}
     dashboard_id = params["dashboard_id"] || params[:dashboard_id]
     system_id = conn.assigns[:system_id]
     user_id = conn.assigns[:user_id]
@@ -31,7 +31,7 @@ defmodule DashboardApiWeb.Plugs.ValidateDashboard do
         |> halt()
 
       true ->
-        validate_dashboard(conn, dashboard_id, system_id,user_id)
+        validate_dashboard(conn, dashboard_id, system_id, user_id)
       end
   end
 

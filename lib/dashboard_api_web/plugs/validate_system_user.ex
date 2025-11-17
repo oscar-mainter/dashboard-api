@@ -12,7 +12,7 @@ defmodule DashboardApiWeb.Plugs.ValidateSystemUser do
   def init(opts), do: opts
 
   def call(conn, _opts) do
-    params = conn.params || conn.body_params || %{}
+    params = conn.params || %{}
     system_id = params["system_id"] || params[:system_id]
     user_id = params["user_id"] || params[:user_id]
 

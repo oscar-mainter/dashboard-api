@@ -1,4 +1,6 @@
 defmodule DashboardApiWeb.DashboardJSON do
+  alias DashboardApiWeb.DashboardCardJSON
+
   def index(%{dashboards: dashboards}) do
     %{data: for(dashboard <- dashboards, do: show(dashboard))}
   end
@@ -15,7 +17,12 @@ defmodule DashboardApiWeb.DashboardJSON do
       user_id: dashboard.user_id,
       inserted_at: dashboard.inserted_at,
       updated_at: dashboard.updated_at,
+      cards: get_cards(dashboard)
     }
+  end
+
+  def error(%{message: message}) do
+    %{error: message}
   end
 
   def error(%{changeset: changeset}) do
@@ -25,7 +32,7 @@ defmodule DashboardApiWeb.DashboardJSON do
     }
   end
 
-  def translate_errors(changeset) do
+  defp translate_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
   end
 
@@ -33,5 +40,13 @@ defmodule DashboardApiWeb.DashboardJSON do
     Enum.reduce(opts, msg, fn {key, value}, acc ->
       String.replace(acc, "%{#{key}}", to_string(value))
     end)
+  end
+
+  defp get_cards(dashboard) do
+    case Map.get(dashboard, :dashboard_cards) do
+      %Ecto.Association.NotLoaded{} -> []
+      nil -> []
+      cards -> for(card <- cards, do: DashboardCardJSON.show(card))
+    end
   end
 end
