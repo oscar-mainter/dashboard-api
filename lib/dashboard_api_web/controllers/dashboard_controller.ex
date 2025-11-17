@@ -23,8 +23,8 @@ defmodule DashboardApiWeb.DashboardController do
   end
 
   def index(conn, params) do
-    system_id = String.to_integer(params["system_id"])
-    user_id = String.to_integer(params["user_id"])
+    system_id = params["system_id"]
+    user_id = params["user_id"]
 
     dashboards = Dashboards.list_dashboards(system_id, user_id)
 
@@ -33,7 +33,7 @@ defmodule DashboardApiWeb.DashboardController do
   end
 
   def show(conn, %{"dashboard_id" => dashboard_id}) do
-    dashboard_id = String.to_integer(dashboard_id)
+    dashboard_id = dashboard_id
 
     case Dashboards.get_dashboard(dashboard_id) do
       {:ok, dashboard} ->
@@ -48,7 +48,7 @@ defmodule DashboardApiWeb.DashboardController do
 
   @spec delete(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def delete(conn, %{"dashboard_id" => dashboard_id}) do
-    dashboard_id = String.to_integer(dashboard_id)
+    dashboard_id = dashboard_id
 
     case Dashboards.delete_dashboard(dashboard_id) do
       {:ok, _dashboard} ->

@@ -25,8 +25,7 @@ defmodule DashboardApiWeb.DashboardCardController do
     end
   end
 
-  def update(conn, %{"id" => id} = params) do
-    card_id = String.to_integer(id)
+  def update(conn, %{"dashboard_card_id" => dashboard_card_id} = params) do
 
     update_attrs = %{
       "x" => params["x"],
@@ -35,7 +34,7 @@ defmodule DashboardApiWeb.DashboardCardController do
       "h" => params["h"]
     }
 
-    case DashboardCards.update_dashboard_card(card_id, update_attrs) do
+    case DashboardCards.update_dashboard_card(dashboard_card_id, update_attrs) do
       {:ok, card} ->
         conn
         |> render(:show, card: card)
@@ -52,10 +51,9 @@ defmodule DashboardApiWeb.DashboardCardController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    card_id = String.to_integer(id)
+  def delete(conn, %{"dashboard_card_id" => dashboard_card_id}) do
 
-    case DashboardCards.delete_dashboard_card(card_id, %{}) do
+    case DashboardCards.delete_dashboard_card(dashboard_card_id, %{}) do
       {:ok, _card} ->
         conn
         |> put_status(:no_content)

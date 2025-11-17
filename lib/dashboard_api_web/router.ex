@@ -25,8 +25,8 @@ defmodule DashboardApiWeb.Router do
       pipe_through :validate_dashboard
 
       post "/", DashboardCardController, :create
-      patch "/:id", DashboardCardController, :update
-      delete "/:id", DashboardCardController, :delete
+      patch "/:dashboard_card_id", DashboardCardController, :update
+      delete "/:dashboard_card_id", DashboardCardController, :delete
     end
   end
 end
