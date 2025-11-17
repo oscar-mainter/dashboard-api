@@ -3,6 +3,9 @@ defmodule DashboardApiWeb.DashboardCardController do
 
   alias DashboardApi.Dashboards.Dashboards
 
+  plug DashboardApiWeb.Plugs.ValidateBody, fields: [:x, :y, :w, :h], only: [:create]
+
+
   def create(conn, params) do
     attrs = %{
       "x" => params["x"],
@@ -17,11 +20,13 @@ defmodule DashboardApiWeb.DashboardCardController do
       {:ok, card} ->
         conn
         |> put_status(:created)
-        |> render(:show, card: card)
+        |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
+        |> render("show.json", %{card: card})
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(:error, changeset: changeset)
+        |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
+        |> render("error.json", changeset: changeset)
     end
   end
 
@@ -37,17 +42,20 @@ defmodule DashboardApiWeb.DashboardCardController do
     case Dashboards.update_dashboard_card(dashboard_card_id, update_attrs) do
       {:ok, card} ->
         conn
-        |> render(:show, card: card)
+        |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
+        |> render("show.json", %{card: card})
 
       {:error, :not_found} ->
         conn
         |> put_status(:not_found)
-        |> render(:error, message: "Dashboard card not found")
+        |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
+        |> render("error.json", %{message: "Dashboard card not found"})
 
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(:error, changeset: changeset)
+        |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
+        |> render("error.json", changeset: changeset)
     end
   end
 
