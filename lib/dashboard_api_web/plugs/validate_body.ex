@@ -6,19 +6,29 @@ defmodule DashboardApiWeb.Plugs.ValidateBody do
 
   Options:
     - :fields - a list of atoms or nested maps specifying required keys
-      Example:
-        [ :name, %{user: [:id, :email]} ]
+    - :only - optional list of actions to run the plug for
+    - :except - optional list of actions to skip the plug
   """
 
   def init(opts), do: opts
 
   def call(conn, opts) do
+    action = conn.private[:phoenix_action]
+
+    cond do
+      only = opts[:only] -> unless action in only, do: conn, else: run_check(conn, opts)
+      except = opts[:except] -> if action in except, do: conn, else: run_check(conn, opts)
+      true -> run_check(conn, opts)
+    end
+  end
+
+  defp run_check(conn, opts) do
     fields = Keyword.fetch!(opts, :fields)
 
-    case check_fields(conn.body_params, fields) do
-      :ok ->
-        conn
+    params = Map.merge(conn.params, conn.body_params)
 
+    case check_fields(params, fields) do
+      :ok -> conn
       {:error, missing} ->
         conn
         |> put_status(:bad_request)
@@ -45,7 +55,6 @@ defmodule DashboardApiWeb.Plugs.ValidateBody do
 
   defp check_fields(params, field_map) when is_map(field_map) do
     [{key, nested_fields}] = Map.to_list(field_map)
-
     value = Map.get(params, Atom.to_string(key)) || Map.get(params, key)
 
     if is_map(value) do

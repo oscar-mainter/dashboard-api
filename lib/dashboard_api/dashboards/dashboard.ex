@@ -19,6 +19,7 @@ defmodule DashboardApi.Dashboards.Dashboard do
     |> validate_length(:name, min: 1, max: 100, message: "name must be between 1 and 100 characters")
     |> foreign_key_constraint(:system_id)
     |> foreign_key_constraint(:user_id)
+    |> unique_constraint(:name, name: :dashboards_user_id_name_index)
   end
 
   defp put_required_ids(changeset, attrs) do

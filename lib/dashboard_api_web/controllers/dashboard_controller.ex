@@ -3,7 +3,7 @@ defmodule DashboardApiWeb.DashboardController do
 
   alias DashboardApi.Dashboards.Dashboards
 
-  plug DashboardApiWeb.Plugs.ValidateBody, fields: [:name, :system_id, :user_id]
+  plug DashboardApiWeb.Plugs.ValidateBody, fields: [:name], only: [:create]
 
   def create(conn, %{"name" => name} = params) do
     attrs = %{
