@@ -38,7 +38,6 @@ defmodule DashboardApi.Dashboards.DashboardCard do
   def update_changeset(dashboard_card, attrs) do
     dashboard_card
     |> cast(attrs, [:x, :y, :w, :h])
-    |> validate_required([:x, :y, :w, :h])
     |> validate_number(:x, greater_than_or_equal_to: 0, message: "x must be greater than or equal to 0")
     |> validate_number(:y, greater_than_or_equal_to: 0, message: "y must be greater than or equal to 0")
     |> validate_number(:w, greater_than: 0, message: "w must be greater than 0")

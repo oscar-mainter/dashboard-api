@@ -32,12 +32,9 @@ defmodule DashboardApiWeb.DashboardCardController do
 
   def update(conn, %{"dashboard_card_id" => dashboard_card_id} = params) do
 
-    update_attrs = %{
-      "x" => params["x"],
-      "y" => params["y"],
-      "w" => params["w"],
-      "h" => params["h"]
-    }
+    update_attrs =
+      params
+      |> Map.take(["x", "y", "w", "h"])
 
     case Dashboards.update_dashboard_card(dashboard_card_id, update_attrs) do
       {:ok, card} ->
