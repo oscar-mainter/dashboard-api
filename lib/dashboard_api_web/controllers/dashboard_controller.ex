@@ -22,15 +22,22 @@ defmodule DashboardApiWeb.DashboardController do
     end
   end
 
-  def index(conn, params) do
-    system_id = params["system_id"]
-    user_id = params["user_id"]
+  def index(conn, %{"system_id" => system_id, "user_id" => user_id} = params) do
+    {dashboards, view} =
+      case params["cards"] do
+        "true" ->
+          {Dashboards.list_dashboards_with_cards(system_id, user_id), DashboardApiWeb.Views.DashboardWithCardsJSON}
 
-    dashboards = Dashboards.list_dashboards(system_id, user_id)
+        _ ->
+          {Dashboards.list_dashboards(system_id, user_id), DashboardApiWeb.Views.DashboardJSON}
+      end
 
     conn
-    |> render(:index, dashboards: dashboards)
+    |> put_view(view)
+    |> render("index.json", %{dashboards: dashboards})
   end
+
+
 
   def show(conn, %{"dashboard_id" => dashboard_id}) do
     dashboard_id = dashboard_id

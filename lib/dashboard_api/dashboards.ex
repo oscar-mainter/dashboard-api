@@ -25,6 +25,12 @@ defmodule DashboardApi.Dashboards.Dashboards do
   def list_dashboards(system_id, user_id) do
     Dashboard
     |> where([d], d.system_id == ^system_id and d.user_id == ^user_id)
+    |> Repo.all()
+  end
+
+  def list_dashboards_with_cards(system_id, user_id) do
+    Dashboard
+    |> where([d], d.system_id == ^system_id and d.user_id == ^user_id)
     |> preload(:dashboard_cards)
     |> Repo.all()
   end

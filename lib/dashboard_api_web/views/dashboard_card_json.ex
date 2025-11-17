@@ -1,9 +1,10 @@
-defmodule DashboardApiWeb.DashboardCardJSON do
-  def show(%{card: card}) do
-    %{data: show(card)}
+defmodule DashboardApiWeb.Views.DashboardCardJSON do
+  def render("index.json", %{cards: cards}) do
+    %{data: for(card <- cards, do: render("show.json", %{card: card}))}
   end
 
-  def show(card) do
+  # Render a single card
+  def render("show.json", %{card: card}) do
     %{
       id: card.id,
       x: card.x,
@@ -13,16 +14,19 @@ defmodule DashboardApiWeb.DashboardCardJSON do
       system_id: card.system_id,
       dashboard_id: card.dashboard_id,
       inserted_at: card.inserted_at,
-      updated_at: card.updated_at,
+      updated_at: card.updated_at
     }
   end
 
-  def error(%{message: message}) do
+  def render("error.json", %{message: message}) do
     %{error: message}
   end
 
-  def error(%{changeset: changeset}) do
-    %{error: "Validation failed", errors: translate_errors(changeset)}
+  def render("error.json", %{changeset: changeset}) do
+    %{
+      error: "Validation failed",
+      errors: translate_errors(changeset)
+    }
   end
 
   defp translate_errors(changeset) do
