@@ -8,8 +8,6 @@ defmodule DashboardApiWeb.Views.DashboardJSON do
     %{
       id: dashboard.id,
       name: dashboard.name,
-      system_id: dashboard.system_id,
-      user_id: dashboard.user_id,
       inserted_at: dashboard.inserted_at,
       updated_at: dashboard.updated_at
     }

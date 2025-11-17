@@ -10,8 +10,6 @@ defmodule DashboardApiWeb.Views.DashboardCardJSON do
       y: card.y,
       w: card.w,
       h: card.h,
-      system_id: card.system_id,
-      dashboard_id: card.dashboard_id,
       inserted_at: card.inserted_at,
       updated_at: card.updated_at
     }
