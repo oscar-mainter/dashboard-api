@@ -21,7 +21,8 @@ defmodule DashboardApiWeb.DashboardController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(:error, changeset:  changeset)
+        |> put_view(DashboardApiWeb.Views.DashboardJSON)
+        |> render("error.json", changeset: changeset)
     end
   end
 
@@ -41,19 +42,18 @@ defmodule DashboardApiWeb.DashboardController do
   end
 
 
-
   def show(conn, %{"dashboard_id" => dashboard_id}) do
-    dashboard_id = dashboard_id
 
     case Dashboards.get_dashboard(dashboard_id) do
       {:ok, dashboard} ->
         conn
-        |> put_view(DashboardApiWeb.Views.DashboardWithCardsJSON)
+        |> put_view(DashboardApiWeb.Views.DashboardJSON)
         |> render("show.json", dashboard: dashboard)
       {:error, :not_found} ->
         conn
         |> put_status(:not_found)
-        |> render(:error, message: "Dashboard not found")
+        |> put_view(DashboardApiWeb.Views.DashboardJSON)
+        |> render("error.json", message: "Dashboard not found")
     end
   end
 

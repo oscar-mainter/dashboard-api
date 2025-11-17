@@ -31,7 +31,7 @@ defmodule DashboardApiWeb.Plugs.ValidateBody do
       :ok -> conn
       {:error, missing} ->
         conn
-        |> put_status(:bad_request)
+        |> put_status(:unprocessable_entity)
         |> Phoenix.Controller.json(%{error: "Missing required fields", missing: missing})
         |> halt()
     end
