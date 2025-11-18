@@ -21,8 +21,4 @@ defmodule DashboardApiWeb.ErrorController do
     |> put_view(DashboardApiWeb.Views.ErrorJSON)
     |> render("error.json", message: to_string(reason))
   end
-
-  def render(template, _assigns) do
-    %{errors: %{detail: Phoenix.Controller.status_message_from_template(template)}}
-  end
 end

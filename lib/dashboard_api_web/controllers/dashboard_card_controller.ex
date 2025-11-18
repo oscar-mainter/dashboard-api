@@ -1,7 +1,7 @@
 defmodule DashboardApiWeb.DashboardCardController do
   use DashboardApiWeb, :controller
 
-  action_fallback(DashboardApiWeb.ErrorController)
+  action_fallback DashboardApiWeb.ErrorController
 
   alias DashboardApi.Dashboards.Dashboards
 
@@ -9,68 +9,31 @@ defmodule DashboardApiWeb.DashboardCardController do
 
 
   def create(conn, params) do
-    attrs = %{
-      "x" => params["x"],
-      "y" => params["y"],
-      "w" => params["w"],
-      "h" => params["h"],
-      "system_id" => params["system_id"],
-      "dashboard_id" => params["dashboard_id"]
-    }
+    attrs = Map.take(params, ["x", "y", "w", "h", "system_id", "dashboard_id"])
 
-    case Dashboards.create_dashboard_card(attrs) do
-      {:ok, card} ->
-        conn
-        |> put_status(:created)
-        |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
-        |> render("show.json", %{card: card})
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> put_view(DashboardApiWeb.Views.ErrorJSON)
-        |> render("error.json", changeset: changeset)
+    with {:ok, card} <- Dashboards.create_dashboard_card(attrs) do
+      conn
+      |> put_status(:created)
+      |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
+      |> render("show.json", %{card: card})
     end
   end
 
   def update(conn, %{"dashboard_card_id" => dashboard_card_id} = params) do
+    attrs = Map.take(params,["x", "y", "w", "h"])
 
-    update_attrs =
-      params
-      |> Map.take(["x", "y", "w", "h"])
-
-    case Dashboards.update_dashboard_card(dashboard_card_id, update_attrs) do
-      {:ok, card} ->
-        conn
-        |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
-        |> render("show.json", %{card: card})
-
-      {:error, :not_found} ->
-        conn
-        |> put_status(:not_found)
-        |> put_view(DashboardApiWeb.Views.ErrorJSON)
-        |> render("error.json", %{message: "Dashboard card not found"})
-
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> put_view(DashboardApiWeb.Views.ErrorJSON)
-        |> render("error.json", changeset: changeset)
+    with {:ok, card} <- Dashboards.update_dashboard_card(dashboard_card_id, attrs) do
+      conn
+      |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
+      |> render("show.json", %{card: card})
     end
   end
 
   def delete(conn, %{"dashboard_card_id" => dashboard_card_id}) do
-
-    case Dashboards.delete_dashboard_card(dashboard_card_id, %{}) do
-      {:ok, _card} ->
-        conn
-        |> put_status(:no_content)
-        |> send_resp(:no_content, "")
-
-      {:error, :not_found} ->
-        conn
-        |> put_status(:not_found)
-        |> put_view(DashboardApiWeb.Views.ErrorJSON)
-        |> render("error.json", %{message: "Dashboard card not found"})
+    with {:ok, _card} <- Dashboards.delete_dashboard_card(dashboard_card_id, %{}) do
+      conn
+      |> send_resp(:no_content, "")
     end
+
   end
 end

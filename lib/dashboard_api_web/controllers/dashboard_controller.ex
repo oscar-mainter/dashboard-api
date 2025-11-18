@@ -1,78 +1,53 @@
 defmodule DashboardApiWeb.DashboardController do
   use DashboardApiWeb, :controller
 
-  action_fallback(DashboardApiWeb.ErrorController)
+  action_fallback DashboardApiWeb.ErrorController
 
   alias DashboardApi.Dashboards.Dashboards
 
   plug DashboardApiWeb.Plugs.ValidateBody, fields: [:name], only: [:create]
 
-  def create(conn, %{"name" => name} = params) do
-    attrs = %{
-      "name" => name,
-      "system_id" => params["system_id"],
-      "user_id" => params["user_id"]
-    }
+  def create(conn, params) do
+    attrs = Map.take(params, ["name", "system_id", "user_id"])
 
-    case Dashboards.create_dashboard(attrs) do
-      {:ok, dashboard} ->
-        conn
-        |> put_status(:created)
-        |> put_view(DashboardApiWeb.Views.DashboardWithCardsJSON)
-        |> render(:show, %{dashboard: dashboard})
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> put_view(DashboardApiWeb.Views.ErrorJSON)
-        |> render("error.json", changeset: changeset)
+    with {:ok, dashboard} <- Dashboards.create_dashboard(attrs) do
+      conn
+      |> put_status(:created)
+      |> put_view(DashboardApiWeb.Views.DashboardWithCardsJSON)
+      |> render(:show, %{dashboard: dashboard})
     end
   end
 
-  def index(conn, %{"system_id" => system_id, "user_id" => user_id} = params) do
-    {dashboards, view} =
-      case params["cards"] do
-        "true" ->
-          {Dashboards.list_dashboards_with_cards(system_id, user_id), DashboardApiWeb.Views.DashboardWithCardsJSON}
+  def index(conn, %{"system_id" => system_id, "user_id" => user_id, "cards" => cards}) do
+    view =
+      if cards == "true",
+        do: DashboardApiWeb.Views.DashboardWithCardsJSON,
+        else: DashboardApiWeb.Views.DashboardJSON
 
-        _ ->
-          {Dashboards.list_dashboards(system_id, user_id), DashboardApiWeb.Views.DashboardJSON}
-      end
+      dashboards =
+        if view == DashboardApiWeb.Views.DashboardWithCardsJSON,
+          do: Dashboards.list_dashboards_with_cards(system_id, user_id),
+          else: Dashboards.list_dashboards(system_id, user_id)
 
-    conn
-    |> put_view(view)
-    |> render("index.json", %{dashboards: dashboards})
+      conn
+      |> put_view(view)
+      |> render("index.json", %{dashboards: dashboards})
   end
 
 
   def show(conn, %{"dashboard_id" => dashboard_id}) do
-
-    case Dashboards.get_dashboard(dashboard_id) do
-      {:ok, dashboard} ->
-        conn
-        |> put_view(DashboardApiWeb.Views.DashboardJSON)
-        |> render("show.json", dashboard: dashboard)
-      {:error, :not_found} ->
-        conn
-        |> put_status(:not_found)
-        |> put_view(DashboardApiWeb.Views.ErrorJSON)
-        |> render("error.json", message: "Dashboard not found")
+    with {:ok, dashboard} <- Dashboards.get_dashboard(dashboard_id) do
+      conn
+      |> put_view(DashboardApiWeb.Views.DashboardJSON)
+      |> render("show.json", %{dashboard: dashboard})
     end
   end
 
   @spec delete(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def delete(conn, %{"dashboard_id" => dashboard_id}) do
-    dashboard_id = dashboard_id
-
-    case Dashboards.delete_dashboard(dashboard_id) do
-      {:ok, _dashboard} ->
-        conn
-        |> put_status(:no_content)
-        |> send_resp(:no_content, "")
-      {:error, :not_found} ->
-        conn
-        |> put_status(:not_found)
-        |> put_view(DashboardApiWeb.Views.ErrorJSON)
-        |> render("error.json", message: "Dashboard not found")
-     end
+    with {:ok, _dashboard} <- Dashboards.delete_dashboard(dashboard_id) do
+      conn
+      |> send_resp(:no_content, "")
+    end
   end
 end
