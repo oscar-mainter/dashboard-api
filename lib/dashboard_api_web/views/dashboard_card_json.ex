@@ -4,7 +4,7 @@ defmodule DashboardApiWeb.Views.DashboardCardJSON do
   end
 
   def render("show.json", %{card: card}) do
-    %{
+    %{data: %{
       id: card.id,
       x: card.x,
       y: card.y,
@@ -12,6 +12,6 @@ defmodule DashboardApiWeb.Views.DashboardCardJSON do
       h: card.h,
       inserted_at: card.inserted_at,
       updated_at: card.updated_at
-    }
+    }}
   end
 end

@@ -1,33 +1,37 @@
 import Config
 
-# Configure your database
-#
-# The MIX_TEST_PARTITION environment variable can be used
-# to provide built-in test partitioning in CI environment.
-# Run `mix help test` for more information.
+# ──────────────────────────────────────────────────────────────
+# DATABASE – Works perfectly with Docker PostgreSQL on localhost
+# ──────────────────────────────────────────────────────────────
 config :dashboard_api, DashboardApi.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
+  port: 5433,
   database: "dashboard_api_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: System.schedulers_online() * 2
 
-# We don't run a server during test. If one is required,
-# you can enable the server option below.
+# Optional: If you ever expose Docker on 5432 instead of 5433, change port to 5432
+
+# ──────────────────────────────────────────────────────────────
+# WEB ENDPOINT – No server needed in tests
+# ──────────────────────────────────────────────────────────────
 config :dashboard_api, DashboardApiWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "+QZ/VFeYSg6BcqrcMVaJCQYGLBsq2w06aRhaFzQnz3zp41EVry+cKB+/gOGJSqH+",
+  secret_key_base: "test-secret-key-that-is-long-enough-for-phoenix",
   server: false
 
-# In test we don't send emails
-config :dashboard_api, DashboardApi.Mailer, adapter: Swoosh.Adapters.Test
+# ──────────────────────────────────────────────────────────────
+# EMAIL & LOGGING
+# ──────────────────────────────────────────────────────────────
+config :dashboard_api, DashboardApi.Mailer,
+  adapter: Swoosh.Adapters.Test
 
-# Disable swoosh api client as it is only required for production adapters
 config :swoosh, :api_client, false
 
-# Print only warnings and errors during test
 config :logger, level: :warning
 
-# Initialize plugs at runtime for faster test compilation
+# Faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+config :phoenix, :json_library, Jason

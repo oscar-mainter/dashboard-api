@@ -5,11 +5,11 @@ defmodule DashboardApiWeb.Views.DashboardJSON do
   end
 
   def render("show.json", %{dashboard: dashboard}) do
-    %{
+    %{data: %{
       id: dashboard.id,
       name: dashboard.name,
       inserted_at: dashboard.inserted_at,
       updated_at: dashboard.updated_at
-    }
+    }}
   end
 end

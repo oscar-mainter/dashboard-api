@@ -1,11 +1,13 @@
 defmodule DashboardApiWeb.Views.DashboardWithCardsJSON do
-  alias DashboardApiWeb.Views.DashboardCardJSON
-
   def render("index.json", %{dashboards: dashboards}) do
-    %{data: for(dashboard <- dashboards, do: render("show.json", %{dashboard: dashboard}))}
+    %{data: for(dashboard <- dashboards, do: data(dashboard))}
   end
 
   def render("show.json", %{dashboard: dashboard}) do
+    %{data: data(dashboard)}
+  end
+
+  defp data(dashboard) do
     %{
       id: dashboard.id,
       name: dashboard.name,
@@ -19,8 +21,19 @@ defmodule DashboardApiWeb.Views.DashboardWithCardsJSON do
     case Map.get(dashboard, :dashboard_cards) do
       %Ecto.Association.NotLoaded{} -> []
       nil -> []
-      cards -> for card <- cards, do: DashboardCardJSON.render("show.json", %{card: card})
+      cards -> for card <- cards, do: card_data(card)
     end
   end
 
+  defp card_data(card) do
+    %{
+      id: card.id,
+      x: card.x,
+      y: card.y,
+      w: card.w,
+      h: card.h,
+      inserted_at: card.inserted_at,
+      updated_at: card.updated_at
+    }
+  end
 end
