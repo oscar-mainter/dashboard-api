@@ -3,7 +3,7 @@ defmodule DashboardApiWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-    plug DashboardApiWeb.Plugs.ConvertToNumericParams
+    plug DashboardApiWeb.Plugs.NormalizeAndValidateIds
   end
 
   pipeline :validate_dashboard do
