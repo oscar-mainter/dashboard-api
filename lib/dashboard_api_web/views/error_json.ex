@@ -1,4 +1,4 @@
-defmodule DashboardApiWeb.ErrorJSON do
+defmodule DashboardApiWeb.Views.ErrorJSON do
   def render("error.json", %{message: message}) when is_binary(message) do
     %{error: message}
   end

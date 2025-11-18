@@ -1,6 +1,8 @@
 defmodule DashboardApiWeb.DashboardCardController do
   use DashboardApiWeb, :controller
 
+  action_fallback(DashboardApiWeb.ErrorController)
+
   alias DashboardApi.Dashboards.Dashboards
 
   plug DashboardApiWeb.Plugs.ValidateBody, fields: [:x, :y, :w, :h], only: [:create]
