@@ -18,9 +18,9 @@ defmodule DashboardApiWeb.DashboardController do
     end
   end
 
-  def index(conn, %{"system_id" => system_id, "user_id" => user_id, "cards" => cards}) do
+  def index(conn, %{"system_id" => system_id, "user_id" => user_id} = params) do
     view =
-      if cards == "true",
+      if params["cards"] == "true",
         do: DashboardApiWeb.Views.DashboardWithCardsJSON,
         else: DashboardApiWeb.Views.DashboardJSON
 
