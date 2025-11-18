@@ -25,7 +25,7 @@ defmodule DashboardApiWeb.DashboardCardController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
+        |> put_view(DashboardApiWeb.Views.ErrorJSON)
         |> render("error.json", changeset: changeset)
     end
   end
@@ -45,13 +45,13 @@ defmodule DashboardApiWeb.DashboardCardController do
       {:error, :not_found} ->
         conn
         |> put_status(:not_found)
-        |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
+        |> put_view(DashboardApiWeb.Views.ErrorJSON)
         |> render("error.json", %{message: "Dashboard card not found"})
 
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> put_view(DashboardApiWeb.Views.DashboardCardJSON)
+        |> put_view(DashboardApiWeb.Views.ErrorJSON)
         |> render("error.json", changeset: changeset)
     end
   end
@@ -67,7 +67,8 @@ defmodule DashboardApiWeb.DashboardCardController do
       {:error, :not_found} ->
         conn
         |> put_status(:not_found)
-        |> render(:error, message: "Dashboard card not found")
+        |> put_view(DashboardApiWeb.Views.ErrorJSON)
+        |> render("error.json", %{message: "Dashboard card not found"})
     end
   end
 end

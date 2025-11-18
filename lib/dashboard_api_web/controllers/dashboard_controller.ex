@@ -21,7 +21,7 @@ defmodule DashboardApiWeb.DashboardController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> put_view(DashboardApiWeb.Views.DashboardJSON)
+        |> put_view(DashboardApiWeb.Views.ErrorJSON)
         |> render("error.json", changeset: changeset)
     end
   end
@@ -52,7 +52,7 @@ defmodule DashboardApiWeb.DashboardController do
       {:error, :not_found} ->
         conn
         |> put_status(:not_found)
-        |> put_view(DashboardApiWeb.Views.DashboardJSON)
+        |> put_view(DashboardApiWeb.Views.ErrorJSON)
         |> render("error.json", message: "Dashboard not found")
     end
   end
@@ -69,7 +69,7 @@ defmodule DashboardApiWeb.DashboardController do
       {:error, :not_found} ->
         conn
         |> put_status(:not_found)
-        |> put_view(DashboardApiWeb.Views.DashboardJSON)
+        |> put_view(DashboardApiWeb.Views.ErrorJSON)
         |> render("error.json", message: "Dashboard not found")
      end
   end
