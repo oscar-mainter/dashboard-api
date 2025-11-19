@@ -1,5 +1,6 @@
 defmodule DashboardApiWeb.Router do
   use DashboardApiWeb, :router
+  alias OpenApiSpex.Plug.{SwaggerUI, RenderSpec}
 
   pipeline :api do
     plug :accepts, ["json"]
@@ -11,7 +12,13 @@ defmodule DashboardApiWeb.Router do
     plug DashboardApiWeb.Plugs.ValidateDashboard
   end
 
-  get "/", DashboardApiWeb.PageController, :index
+  scope "/" do
+    get "/", DashboardApiWeb.PageController, :index
+
+    get "/openapi", RenderSpec, module: DashboardApiWeb.ApiSpec
+
+    get "/docs", SwaggerUI, path: "/openapi"
+  end
 
   scope "/api/v1/systems/:system_id/users/:user_id/dashboards", DashboardApiWeb do
     pipe_through [:api, DashboardApiWeb.Plugs.ValidateSystemUser]

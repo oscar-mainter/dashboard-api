@@ -1,5 +1,11 @@
 defmodule DashboardApiWeb.DashboardController do
   use DashboardApiWeb, :controller
+  use OpenApiSpex.ControllerSpecs
+
+  alias OpenApiSpex.Schema
+  alias DashboardApiWeb.Schemas.{Dashboard, DashboardWithCards, ErrorResponse, ValidationErrorResponse, NotFoundResponse, UnauthorizedResponse}
+  alias DashboardApiWeb.OpenAPI.Parameters
+  alias DashboardApi.Dashboards.Dashboards
 
   action_fallback DashboardApiWeb.ErrorController
 
