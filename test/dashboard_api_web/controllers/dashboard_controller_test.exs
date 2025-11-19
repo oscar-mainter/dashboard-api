@@ -29,12 +29,10 @@ defmodule DashboardApiWeb.DashboardControllerTest do
     test "fails without name", %{conn: conn, system: system, user: user} do
       conn = post(conn, ~p"/api/v1/systems/#{system.id}/users/#{user.id}/dashboards", %{})
 
-      # ← THIS IS THE ONLY LINE YOU NEED TO CHANGE
       assert json_response(conn, 422)["error"] == "Missing required fields"
     end
   end
 
-  # All the rest stays exactly the same — they already work!
   describe "index dashboards" do
     setup do
       system = fixture(:system)
@@ -61,8 +59,8 @@ defmodule DashboardApiWeb.DashboardControllerTest do
 
   describe "show dashboard" do
     setup do
-      system   = fixture(:system)
-      user     = fixture(:user, %{system: system})
+      system = fixture(:system)
+      user = fixture(:user, %{system: system})
       dashboard = fixture(:dashboard, %{system: system, user: user})
       %{system: system, user: user, dashboard: dashboard}
     end
