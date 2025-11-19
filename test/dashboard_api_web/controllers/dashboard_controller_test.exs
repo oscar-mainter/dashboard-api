@@ -51,6 +51,7 @@ defmodule DashboardApiWeb.DashboardControllerTest do
     end
 
     test "with cards=true", %{conn: conn, system: system, user: user} do
+
       conn = get(conn, ~p"/api/v1/systems/#{system.id}/users/#{user.id}/dashboards?cards=true")
       assert %{"data" => [dash | _]} = json_response(conn, 200)
       assert is_list(dash["cards"])
